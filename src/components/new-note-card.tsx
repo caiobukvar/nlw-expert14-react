@@ -1,17 +1,26 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 export function NewNoteCard() {
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true);
+  const [content, setContent] = useState("");
 
   function handleStartEditor() {
     setShouldShowOnboarding(false);
   }
+
   function handleContentChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    setContent(e.target.value);
+
     if (e.target.value === "") {
       setShouldShowOnboarding(true);
     }
+  }
+
+  function handleSaveNote(e: FormEvent) {
+    // ? para não limpar os dados (por padrão espera que leve para uma nova página)
+    e.preventDefault();
   }
 
   return (
@@ -34,44 +43,50 @@ export function NewNoteCard() {
               <X className="size-5" />
             </Dialog.Close>
 
-            <div className="flex flex-1 flex-col gap-3 p-5">
-              <span className="text-sm font-medium text-slate-300">
-                Adicionar nota
-              </span>
-
-              {shouldShowOnboarding ? (
-                <p className="text-sm leading-6 text-slate-400">
-                  Comece{" "}
-                  <button
-                    className="text-md hover:underline text-lime-400"
-                    onClick={() => handleStartEditor()}
-                  >
-                    gravando uma nota
-                  </button>{" "}
-                  em áudio ou se preferir{" "}
-                  <button
-                    className="text-md hover:underline text-lime-400"
-                    onClick={() => handleStartEditor()}
-                  >
-                    utilize apenas texto
-                  </button>
-                  .
-                </p>
-              ) : (
-                <textarea
-                  autoFocus
-                  className="text-sm leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none"
-                  onChange={(e) => handleContentChange(e)}
-                />
-              )}
-            </div>
-
-            <button
-              type="button"
-              className="w-full bg-lime-400 py-4 text-center text-sm text-lime-950 font-medium hover:bg-lime-500"
+            <form
+              action="button"
+              onSubmit={(e) => handleSaveNote(e)}
+              className="flex-1 flex flex-col"
             >
-              Salvar nota
-            </button>
+              <div className="flex flex-1 flex-col gap-3 p-5">
+                <span className="text-sm font-medium text-slate-300">
+                  Adicionar nota
+                </span>
+
+                {shouldShowOnboarding ? (
+                  <p className="text-sm leading-6 text-slate-400">
+                    Comece{" "}
+                    <button
+                      className="text-md hover:underline text-lime-400"
+                      onClick={() => handleStartEditor()}
+                    >
+                      gravando uma nota
+                    </button>{" "}
+                    em áudio ou se preferir{" "}
+                    <button
+                      className="text-md hover:underline text-lime-400"
+                      onClick={() => handleStartEditor()}
+                    >
+                      utilize apenas texto
+                    </button>
+                    .
+                  </p>
+                ) : (
+                  <textarea
+                    autoFocus
+                    className="text-sm leading-6 text-slate-400 bg-transparent resize-none flex-1 outline-none"
+                    onChange={(e) => handleContentChange(e)}
+                  />
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-lime-400 py-4 text-center text-sm text-lime-950 font-medium hover:bg-lime-500"
+              >
+                Salvar nota
+              </button>
+            </form>
           </Dialog.Content>
         </Dialog.Overlay>
       </Dialog.Portal>
