@@ -1,6 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { toast } from "sonner";
 
 export function NewNoteCard() {
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true);
@@ -21,6 +22,8 @@ export function NewNoteCard() {
   function handleSaveNote(e: FormEvent) {
     // ? para não limpar os dados (por padrão espera que leve para uma nova página)
     e.preventDefault();
+
+    toast.success("Nota criada com sucesso!");
   }
 
   return (
