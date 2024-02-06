@@ -20,7 +20,7 @@ export function NewNoteCard() {
   }
 
   function handleSaveNote(e: FormEvent) {
-    // ? para não limpar os dados (por padrão espera que leve para uma nova página)
+    // ? para não limpar os dados (por padrão limpa e espera que leve para uma nova página)
     e.preventDefault();
 
     toast.success("Nota criada com sucesso!");
