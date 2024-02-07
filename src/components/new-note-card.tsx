@@ -8,7 +8,10 @@ interface NewNoteCardProps {
   onNoteCreated: (content: string) => void;
 }
 
-let speechRecognition: SpeechRecognition | null = null;
+const SpeechRecognitionAPI =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+
+const speechRecognition = new SpeechRecognitionAPI();
 
 export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true);
@@ -56,19 +59,11 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
     setIsRecording(true);
     setShouldShowOnboarding(false);
 
-    const SpeechRecognitionAPI =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    speechRecognition = new SpeechRecognitionAPI();
-
     speechRecognition.lang = "pt-BR";
-
     // * continuous => para somente sobre comando.
     speechRecognition.continuous = true;
-
     // * maxAlternatives pega a palavra que ele acredita que seja a que foi falada
     speechRecognition.maxAlternatives = 1;
-
     // * adiciona os resultados antes de terminar de falar
     speechRecognition.interimResults = true;
 
@@ -114,7 +109,7 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
 
       <Dialog.Portal>
         <Dialog.Overlay className="inset-0 fixed bg-black/60">
-          <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[640px] h-[60vh] w-full bg-slate-700 rounded-md flex flex-col outline-none overflow-hidden">
+          <Dialog.Content className="fixed inset-0 md:inset-auto md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-[640px] md:h-[60vh] w-full bg-slate-700 md:rounded-md flex flex-col outline-none overflow-hidden">
             <Dialog.Close className="absolute top-0 right-0 p-1.5 text-slate-400 hover:text-slate-100">
               <X className="size-5" />
             </Dialog.Close>
@@ -166,8 +161,8 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
                 </button>
               ) : (
                 <button
-                  type="submit"
-                  onClick={(e) => handleSaveNote(e)}
+                  type="button"
+                  onClick={handleSaveNote}
                   className="w-full bg-lime-400 py-4 text-center text-sm text-lime-950 font-medium hover:bg-lime-500"
                 >
                   Salvar nota
